@@ -81,7 +81,7 @@ class PathodHandler(tcp.BaseHandler):
                         handle_sni = self.handle_sni,
                         request_client_cert = self.server.ssloptions.request_client_cert
                     )
-                except tcp.NetLibError, v:
+                except tcp.NetLibError as v:
                     s = str(v)
                     self.info(s)
                     return False, dict(type = "error", msg = s)
@@ -126,7 +126,7 @@ class PathodHandler(tcp.BaseHandler):
             content = http.read_http_body_request(
                         self.rfile, self.wfile, headers, httpversion, None
                     )
-        except http.HttpError, s:
+        except http.HttpError as s:
             s = str(s)
             self.info(s)
             return False, dict(type = "error", msg = s)
@@ -142,7 +142,7 @@ class PathodHandler(tcp.BaseHandler):
             self.info("crafting spec: %s"%spec)
             try:
                 crafted = language.parse_response(self.server.request_settings, spec)
-            except language.ParseException, v:
+            except language.ParseException as v:
                 self.info("Parse error: %s"%v.msg)
                 crafted = language.make_error_response(
                         "Parse Error",
@@ -187,7 +187,7 @@ class PathodHandler(tcp.BaseHandler):
                     handle_sni = self.handle_sni,
                     request_client_cert = self.server.ssloptions.request_client_cert
                 )
-            except tcp.NetLibError, v:
+            except tcp.NetLibError as v:
                 s = str(v)
                 self.server.add_log(
                     dict(
@@ -258,7 +258,7 @@ class Pathod(tcp.TCPServer):
                     raise PathodError("Invalid regex in anchor: %s"%i[0])
                 try:
                     aresp = language.parse_response(self.request_settings, i[1])
-                except language.ParseException, v:
+                except language.ParseException as v:
                     raise PathodError("Invalid page spec in anchor: '%s', %s"%(i[1], str(v)))
                 self.anchors.append((arex, i[1]))
 
@@ -268,7 +268,7 @@ class Pathod(tcp.TCPServer):
         """
         try:
             l = req.maximum_length(settings)
-        except language.FileAccessDenied, v:
+        except language.FileAccessDenied as v:
             return "File access denied."
         if self.sizelimit and l > self.sizelimit:
             return "Response too large."

@@ -972,7 +972,7 @@ def parse_response(settings, s):
         s = read_file(settings, s)
     try:
         return Response(Response.expr().parseString(s, parseAll=True))
-    except pp.ParseException, v:
+    except pp.ParseException as v:
         raise ParseException(v.msg, v.line, v.col)
 
 
@@ -988,5 +988,5 @@ def parse_request(settings, s):
         s = read_file(settings, s)
     try:
         return Request(Request.expr().parseString(s, parseAll=True))
-    except pp.ParseException, v:
+    except pp.ParseException as v:
         raise ParseException(v.msg, v.line, v.col)

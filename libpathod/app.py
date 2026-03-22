@@ -124,7 +124,7 @@ def make_app(noapi):
                 r = language.parse_request(app.config["pathod"].request_settings, spec)
             else:
                 r = language.parse_response(app.config["pathod"].request_settings, spec)
-        except language.ParseException, v:
+        except language.ParseException as v:
             args["syntaxerror"] = str(v)
             args["marked"] = v.marked()
             return render(template, False, **args)

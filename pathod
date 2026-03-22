@@ -9,7 +9,7 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
         pid = os.fork()
         if pid > 0:
             sys.exit(0)
-    except OSError, e:
+    except OSError as e:
         sys.stderr.write ("fork #1 failed: (%d) %s\n" % (e.errno, e.strerror) )
         sys.exit(1)
     os.chdir("/")
@@ -19,7 +19,7 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
         pid = os.fork()
         if pid > 0:
             sys.exit(0)
-    except OSError, e:
+    except OSError as e:
         sys.stderr.write ("fork #2 failed: (%d) %s\n" % (e.errno, e.strerror) )
         sys.exit(1)
     si = open(stdin, 'rb')
@@ -72,7 +72,7 @@ def main(parser, args):
     if args.sizelimit:
         try:
             sizelimit = utils.parse_size(args.sizelimit)
-        except ValueError, v:
+        except ValueError as v:
             parser.error(v)
 
     try:
@@ -94,9 +94,9 @@ def main(parser, args):
             hexdump = args.hexdump,
             explain = args.explain,
         )
-    except pathod.PathodError, v:
+    except pathod.PathodError as v:
         parser.error(str(v))
-    except language.FileAccessDenied, v:
+    except language.FileAccessDenied as v:
         parser.error("%s You probably want to a -d argument."%str(v))
 
     try:

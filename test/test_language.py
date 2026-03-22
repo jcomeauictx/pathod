@@ -673,7 +673,7 @@ class TestResponse:
         tutils.raises(language.ParseException, language.parse_response, {}, "400:msg,b:")
         try:
             language.parse_response({}, "400'msg':b:")
-        except language.ParseException, v:
+        except language.ParseException as v:
             assert v.marked()
             assert str(v)
 
