@@ -1,10 +1,23 @@
-import operator, string, random, mmap, os, time, copy
+import sys, operator, string, random, mmap, os, time, copy
 import abc
 from email.utils import formatdate
-import contrib.pyparsing as pp
+try:
+    import contrib.pyparsing as pp
+except ImportError:
+    from .contrib import pyparsing as pp
 from netlib import http_status, tcp, http_uastrings
-
-import utils
+try:
+    import utils
+except ImportError:
+    from . import utils
+try:
+    reduce
+except NameError:
+    from functools import reduce
+try:
+    file
+except NameError:
+    file = open
 
 BLOCKSIZE = 1024
 TRUNCATE = 1024
@@ -966,6 +979,8 @@ def parse_response(settings, s):
     """
     try:
         s = s.decode("ascii")
+    except AttributeError:
+        s = s.encode().decode('ascii')
     except UnicodeError:
         raise ParseException("Spec must be valid ASCII.", 0, 0)
     if s.startswith(FILESTART):
@@ -982,6 +997,8 @@ def parse_request(settings, s):
     """
     try:
         s = s.decode("ascii")
+    except AttributeError:
+        s = s.encode().decode('ascii')
     except UnicodeError:
         raise ParseException("Spec must be valid ASCII.", 0, 0)
     if s.startswith(FILESTART):

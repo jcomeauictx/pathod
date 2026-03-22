@@ -1,6 +1,13 @@
-import logging, pprint, cStringIO
+import logging, pprint
+try:
+    import cStringIO
+except ImportError:
+    import io as cStringIO
 from flask import Flask, jsonify, render_template, request, abort, make_response
-import version, language, utils
+try:
+    import version, language, utils
+except ImportError:
+    from . import version, language, utils
 from netlib import http_uastrings
 
 logging.basicConfig(level="DEBUG")

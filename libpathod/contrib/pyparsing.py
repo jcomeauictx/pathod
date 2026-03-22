@@ -139,7 +139,10 @@ else:
 
 # build list of single arg builtins, tolerant of Python version, that can be used as parse actions
 singleArgBuiltins = []
-import __builtin__
+try:
+    import __builtin__
+except ImportError:
+    import builtins as __builtin__
 for fname in "sum len enumerate sorted reversed list tuple set any all".split():
     try:
         singleArgBuiltins.append(getattr(__builtin__,fname))
@@ -683,7 +686,10 @@ else:
     def _trim_arity(func, maxargs=2):
         limit = maxargs
         def wrapper(*args):
-            #~ nonlocal limit
+            try:
+                nonlocal limit
+            except NameError:
+                logging.debug('python2 does not support `nonlocal`')
             while 1:
                 try:
                     return func(*args[limit:])

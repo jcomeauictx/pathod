@@ -2,7 +2,10 @@ import sys, os
 import json
 from netlib import tcp, http
 import netlib.utils
-import language, utils
+try:
+    import language, utils
+except ImportError:
+    from . import language, utils
 
 class PathocError(Exception): pass
 

@@ -1,7 +1,14 @@
 import urllib, threading, re, logging, socket, sys, base64
 from netlib import tcp, http, odict, wsgi, certutils
 import netlib.utils
-import version, app, language, utils
+try:
+    import version, app, language, utils
+except ImportError:
+    from . import version, app, language, utils
+try:
+    file
+except NameError:
+    file = open
 
 logger = logging.getLogger('pathod')
 

@@ -1,4 +1,8 @@
-import json, cStringIO
+import json
+try:
+    import cStringIO
+except ImportError:
+    import io as cStringIO
 from libpathod import pathoc, test, version, pathod
 import tutils
 

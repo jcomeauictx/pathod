@@ -1,6 +1,13 @@
-import json, threading, Queue
+import json, threading
+try:
+    import Queue
+except ImportError:
+    import queue as Queue
 import requests
-import pathod, utils
+try:
+    import pathod, utils
+except ImportError:
+    from . import pathod, utils
 
 
 class Daemon:
