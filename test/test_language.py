@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os, cStringIO
 from libpathod import language, utils
 import tutils
