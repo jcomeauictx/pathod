@@ -1,7 +1,10 @@
-import tempfile, os, shutil
+from __future__ import unicode_literals
+import tempfile, os, shutil, logging
 from contextlib import contextmanager
 from libpathod import utils, test, pathoc, pathod
 import requests
+
+logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 class DaemonTests:
     noweb = False
@@ -45,6 +48,7 @@ class DaemonTests:
         )
 
     def get(self, spec):
+        logging.debug('attempting to fetch %s', self.d.p(spec))
         return requests.get(self.d.p(spec), verify=False)
 
     def pathoc(self, spec, timeout=None, connect_to=None, ssl=None):
