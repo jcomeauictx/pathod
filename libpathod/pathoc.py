@@ -1,11 +1,11 @@
-import sys, os
-import json
+import sys, os, logging, json
 from netlib import tcp, http
 import netlib.utils
 try:
     import language, utils
 except ImportError:
     from . import language, utils
+logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 class PathocError(Exception): pass
 
@@ -30,6 +30,7 @@ class Pathoc(tcp.TCPClient):
         self.clientcert = clientcert
 
     def http_connect(self, connect_to, wfile, rfile):
+        logging.debug('connect_to: %r', connect_to)
         wfile.write(
                     b'CONNECT %s:%s HTTP/1.1\r\n'%tuple(connect_to) +
                     b'\r\n'
