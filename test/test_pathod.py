@@ -1,7 +1,11 @@
+import logging
+from __future__ import unicode_literals
 from libpathod import pathod, version
 from netlib import tcp, http
 import requests
 import tutils
+
+logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 class TestPathod:
     def test_instantiation(self):
@@ -139,6 +143,7 @@ class CommonTests(tutils.DaemonTests):
     def test_invalid_headers(self):
         tutils.raises(http.HttpError, self.pathoc, "get:/:h'\t'='foo'")
         l = self.d.last_log()
+        logging.debug('l: %r', l)
         assert l["type"] == "error"
         assert "Invalid headers" in l["msg"]
 

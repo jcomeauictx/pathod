@@ -64,10 +64,11 @@ def inner_repr(s):
         Returns the inner portion of a string or unicode repr (i.e. without the
         quotes)
     """
-    if isinstance(s, unicode):
-        return repr(s)[2:-1]
+    r = repr(s)
+    if r.startswith('u'):
+        return r[2:-1]
     else:
-        return repr(s)[1:-1]
+        return r[1:-1]
 
 
 def escape_unprintables(s):
