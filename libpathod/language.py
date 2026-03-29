@@ -18,6 +18,10 @@ try:
     file
 except NameError:
     file = open
+try:
+    basestring
+except NameError:
+    basestring = str
 
 BLOCKSIZE = 1024
 TRUNCATE = 1024
