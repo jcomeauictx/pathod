@@ -1,5 +1,5 @@
-import logging
 from __future__ import unicode_literals
+import logging
 from libpathod import pathod, version
 from netlib import tcp, http
 import requests
