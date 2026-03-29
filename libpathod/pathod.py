@@ -220,9 +220,9 @@ class PathodHandler(tcp.BaseHandler):
                     self._log_bytes("Request", log["request_bytes"], self.server.hexdump)
                 if self.server.logresp:
                     try:
-                        log["response_bytes"] = self.wfile.get_log().encode("string_escape")
+                        log["response_bytes"] = self.wfile.get_log().decode().encode("string_escape")
                     except LookupError:
-                        log["response_bytes"] = self.wfile.get_log().encode("unicode_escape")
+                        log["response_bytes"] = self.wfile.get_log().decode().encode("unicode_escape")
                     self._log_bytes("Response", log["response_bytes"], self.server.hexdump)
                 self.server.add_log(log)
             if not again:
