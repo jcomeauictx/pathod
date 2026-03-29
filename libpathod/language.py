@@ -22,6 +22,11 @@ try:
     basestring
 except NameError:
     basestring = str
+try:
+    u''.encode('string_escape')
+    STRING_ESCAPE = 'string_escape'
+except LookupError:
+    STRING_ESCAPE = 'unicode_escape'
 
 BLOCKSIZE = 1024
 TRUNCATE = 1024
@@ -246,7 +251,7 @@ class _Token(object):
 
 class _ValueLiteral(_Token):
     def __init__(self, val):
-        self.val = val.decode("string_escape")
+        self.val = val.encode().decode(STRING_ESCAPE)
 
     def get_generator(self, settings):
         return LiteralGenerator(self.val)
@@ -262,7 +267,7 @@ class ValueLiteral(_ValueLiteral):
         return e.setParseAction(lambda x: klass(*x))
 
     def spec(self):
-        return '"%s"'%self.val.encode("string_escape")
+        return '"%s"'%self.val.encode(STRING_ESCAPE)
 
 
 class ValueNakedLiteral(_ValueLiteral):
@@ -272,7 +277,7 @@ class ValueNakedLiteral(_ValueLiteral):
         return e.setParseAction(lambda x: klass(*x))
 
     def spec(self):
-        return self.val.encode("string_escape")
+        return self.val.encode(STRING_ESCAPE)
 
 
 class ValueGenerate(_Token):
@@ -289,7 +294,7 @@ class ValueGenerate(_Token):
 
     def freeze(self, settings):
         g = self.get_generator(settings)
-        return ValueLiteral(g[:].encode("string_escape"))
+        return ValueLiteral(g[:].encode(STRING_ESCAPE))
 
     @classmethod
     def expr(klass):
@@ -341,7 +346,7 @@ class ValueFile(_Token):
         return FileGenerator(s)
 
     def spec(self):
-        return '<"%s"'%self.path.encode("string_escape")
+        return '<"%s"'%self.path.encode(STRING_ESCAPE)
 
 
 Value = pp.MatchFirst(
@@ -826,10 +831,10 @@ class _Message(object):
             # Careful not to log any VALUE specs without sanitizing them first. We truncate at 1k.
             if hasattr(v, "values"):
                 v = [x[:TRUNCATE] for x in v.values(settings)]
-                v = "".join(v).encode("string_escape")
+                v = "".join(v).encode(STRING_ESCAPE)
             elif hasattr(v, "__len__"):
                 v = v[:TRUNCATE]
-                v = v.encode("string_escape")
+                v = v.encode(STRING_ESCAPE)
             ret[i] = v
         ret["spec"] = self.spec()
         return ret
