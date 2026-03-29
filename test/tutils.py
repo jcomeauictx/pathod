@@ -4,6 +4,15 @@ from contextlib import contextmanager
 from libpathod import utils, test, pathoc, pathod
 import requests
 
+try:
+    basestring
+except NameError:
+    basestring = str
+try:
+    apply
+except NameError:
+    apply = lambda obj, args, kwargs: obj(*args, **kwargs)
+
 logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 class DaemonTests:
