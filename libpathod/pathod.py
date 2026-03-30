@@ -1,4 +1,8 @@
-import urllib, threading, re, logging, socket, sys, base64
+import threading, re, logging, socket, sys, base64
+try:
+    from urllib import unquote
+except ImportError:
+    from urllib.parse import unquote
 from netlib import tcp, http, odict, wsgi, certutils
 import netlib.utils
 try:
@@ -145,7 +149,7 @@ class PathodHandler(tcp.BaseHandler):
                 return self.serve_crafted(aresp, request_log)
 
         if not self.server.nocraft and path.startswith(self.server.craftanchor):
-            spec = urllib.unquote(path)[len(self.server.craftanchor):]
+            spec = unquote(path)[len(self.server.craftanchor):]
             self.info("crafting spec: %s"%spec)
             try:
                 crafted = language.parse_response(self.server.request_settings, spec)
