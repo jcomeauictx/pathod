@@ -13,6 +13,11 @@ try:
     file
 except NameError:
     file = open
+try:
+    u''.encode('string_escape')
+    STRING_ESCAPE = 'string_escape'
+except LookupError:
+    STRING_ESCAPE = 'unicode_escape'
 
 logger = logging.getLogger('pathod')
 
@@ -217,16 +222,10 @@ class PathodHandler(tcp.BaseHandler):
             again, log = self.handle_request()
             if log:
                 if self.server.logreq:
-                    try:
-                        log["request_bytes"] = self.rfile.get_log().decode().encode("string_escape")
-                    except LookupError:
-                        log["request_bytes"] = self.rfile.get_log().decode().encode("unicode_escape")
+                    log["request_bytes"] = self.rfile.get_log().decode().encode(STRING_ESCAPE)
                     self._log_bytes("Request", log["request_bytes"], self.server.hexdump)
                 if self.server.logresp:
-                    try:
-                        log["response_bytes"] = self.wfile.get_log().decode().encode("string_escape")
-                    except LookupError:
-                        log["response_bytes"] = self.wfile.get_log().decode().encode("unicode_escape")
+                    log["response_bytes"] = self.wfile.get_log().decode().encode(STRING_ESCAPE)
                     self._log_bytes("Response", log["response_bytes"], self.server.hexdump)
                 self.server.add_log(log)
             if not again:
