@@ -48,7 +48,7 @@ class TestDaemonSSL(_TestDaemon):
             "127.0.0.1",
             self.d.port,
             ssl = True,
-            sni = "foobar.com"
+            sni = b'foobar.com'
         )
         c.connect()
         c.request("get:/p/200")
