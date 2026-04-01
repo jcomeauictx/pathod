@@ -76,6 +76,7 @@ class PathodHandler(tcp.BaseHandler):
         line = self.rfile.readline()
         if line in (b'\r\n', b'\n'): # Possible leftover from previous message
             line = self.rfile.readline()
+        logging.debug('PathodHandler.handle_request: line=%r', line)
         if line == b'':
             # Normal termination
             return False, None
@@ -107,7 +108,7 @@ class PathodHandler(tcp.BaseHandler):
         elif m(http.parse_init_http(line)):
             method, path, httpversion = m.v
         else:
-            s = "Invalid first line: %s"%repr(line)
+            s = "Invalid first line: %s" % repr(line)
             self.info(s)
             return False, dict(type = "error", msg = s)
 
