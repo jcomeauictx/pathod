@@ -32,9 +32,8 @@ class Pathoc(tcp.TCPClient):
     def http_connect(self, connect_to, wfile, rfile):
         logging.debug('connect_to: %r', connect_to)
         wfile.write(
-                    b'CONNECT %s:%s HTTP/1.1\r\n'%tuple(connect_to) +
-                    b'\r\n'
-                    )
+            ('CONNECT %s:%s HTTP/1.1\r\n\r\n' % tuple(connect_to)).encode()
+        )
         wfile.flush()
         l = rfile.readline()
         if not l:

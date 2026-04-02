@@ -138,7 +138,7 @@ class TestDaemon(_TestDaemon):
         assert "File" in self.tval(["+/nonexistent"])
 
     def test_connect_fail(self):
-        to = ("foobar", 80)
+        to = ('foobar', 80)
         c = pathoc.Pathoc("127.0.0.1", self.d.port)
         r, w = cStringIO.StringIO(), cStringIO.StringIO()
         tutils.raises("connect failed", c.http_connect, to, w, r)
