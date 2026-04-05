@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import sys, os, logging, json
 from netlib import tcp, http
 import netlib.utils
@@ -79,7 +80,7 @@ class Pathoc(tcp.TCPClient):
                 print >> fp, "\t%s %s %s"%line
         else:
             print >> fp, "%s (unprintables escaped):"%header
-            print >> fp, netlib.utils.cleanBin(data)
+            print >> fp, netlib.utils.clean_bin(data)
 
     def print_request(self, spec, showreq, showresp, explain, hexdump, ignorecodes, ignoretimeout, fp=sys.stdout):
         """

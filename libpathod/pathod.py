@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import threading, re, logging, socket, sys, base64
 try:
     from urllib import unquote
@@ -192,7 +193,7 @@ class PathodHandler(tcp.BaseHandler):
                 s.append("\t%s %s %s"%line)
         else:
             s.append("%s (unprintables escaped):"%header)
-            s.append(netlib.utils.cleanBin(data))
+            s.append(netlib.utils.clean_bin(data))
         self.info("\n".join(s))
 
     def handle(self):
