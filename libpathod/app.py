@@ -3,7 +3,12 @@ try:
     import cStringIO
 except ImportError:
     import io as cStringIO
-from flask import Flask, jsonify, render_template, request, abort, make_response
+from flask import Flask, jsonify, render_template, request, abort
+try:
+    from flask import make_response
+except ImportError:  # flask < 0.6 didn't have it
+    def make_response(*args):
+        return Response(*args)
 try:
     import version, language, utils
 except ImportError:

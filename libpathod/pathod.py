@@ -17,7 +17,7 @@ except NameError:
 try:
     u''.encode('string_escape')
     STRING_ESCAPE = 'string_escape'
-except LookupError:
+except (TypeError, LookupError):
     STRING_ESCAPE = 'unicode_escape'
 
 logger = logging.getLogger('pathod')
