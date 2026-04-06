@@ -175,7 +175,13 @@ class PathodHandler(tcp.BaseHandler):
             self.info("app: %s %s"%(method, path))
             cc = wsgi.ClientConn(self.client_address)
             req = wsgi.Request(cc, "http", method, path, headers, content)
-            sn = self.connection.getsockname()
+            try:
+                # fails on python2
+                sn = self.connection.getsockname()
+            except AttributeError as error:
+                logging.error('no connection.getsockname supported: %s', error)
+                logging.debug('available attributes: %s', dir(self.connection))
+                sn = self.connection._socket.getsockname()
             app = wsgi.WSGIAdaptor(
                 self.server.app,
                 sn[0],
