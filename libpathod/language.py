@@ -32,7 +32,10 @@ except AttributeError:
 logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 logging.debug('pathod.language: STRING_ESCAPE=%s', STRING_ESCAPE)
 logging.debug('pathod.language: sys.version_info = %s', sys.version_info)
-
+logging.quiet = lambda *args, **kwargs: logging.log(
+    logging.NOTSET,
+    *args, **kwargs
+)
 BLOCKSIZE = 1024
 TRUNCATE = 1024
 
@@ -57,13 +60,13 @@ def send_chunk(fp, val, blocksize, start, end):
     '''
     (start, end): Inclusive lower bound, exclusive upper bound.
     '''
-    logging.debug(
+    logging.quiet(
         'language.send_chunk: val %r, blocksize %s, start %s, end %s',
         val, blocksize, start, end
     )
     for i in range(start, end, blocksize):
         chunk = val[i:min(i + blocksize, end)]
-        logging.debug('language.send_chunk: sending %r', chunk)
+        #logging.debug('language.send_chunk: sending %r', chunk)
         fp.write(chunk)
     return end-start
 
