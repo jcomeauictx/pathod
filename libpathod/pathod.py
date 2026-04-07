@@ -182,6 +182,7 @@ class PathodHandler(tcp.BaseHandler):
                 logging.error('no connection.getsockname supported: %s', error)
                 logging.debug('available attributes: %s', dir(self.connection))
                 sn = self.connection._socket.getsockname()
+                logging.info('sockname: %r', sn)
             app = wsgi.WSGIAdaptor(
                 self.server.app,
                 sn[0],
