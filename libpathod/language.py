@@ -54,13 +54,17 @@ class ParseException(Exception):
 
 
 def send_chunk(fp, val, blocksize, start, end):
-    """
-        (start, end): Inclusive lower bound, exclusive upper bound.
-    """
+    '''
+    (start, end): Inclusive lower bound, exclusive upper bound.
+    '''
+    logging.debug(
+        'language.send_chunk: val %r, blocksize %s, start %s, end %s',
+        val, blocksize, start, end
+    )
     for i in range(start, end, blocksize):
-        fp.write(
-            val[i:min(i+blocksize, end)]
-        )
+        chunk = val[i:min(i + blocksize, end)]
+        logging.debug('language.send_chunk: sending %r', chunk)
+        fp.write(chunk)
     return end-start
 
 
@@ -144,7 +148,7 @@ DATATYPES = dict(
     punctuation = string.punctuation,
     whitespace = string.whitespace,
     ascii = string.printable,
-    bytes = bytes(bytearray(range(256)))
+    bytes = bytes(bytearray(range(256))).decode('latin-1')
 )
 
 
@@ -202,7 +206,7 @@ class RandomGenerator:
         return ''.join(random.choice(chars) for x in range(a, b))
 
     def __repr__(self):
-        return "%s random from %s"%(self.length, self.dtype)
+        return "%s random from %s" % (self.length, self.dtype)
 
 
 class FileGenerator:
