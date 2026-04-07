@@ -1,4 +1,5 @@
-import sys, operator, string, random, mmap, os, time, copy
+from __future__ import unicode_literals
+import sys, operator, string, random, mmap, os, time, copy, logging
 import abc
 from email.utils import formatdate
 try:
@@ -23,10 +24,14 @@ try:
 except NameError:
     basestring = str
 try:
-    u''.encode('string_escape')
+    b'\x80'.encode('string_escape')
     STRING_ESCAPE = 'string_escape'
-except (TypeError, LookupError):
+except AttributeError:
     STRING_ESCAPE = 'unicode_escape'
+
+logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
+logging.debug('pathod.language: STRING_ESCAPE=%s', STRING_ESCAPE)
+logging.debug('pathod.language: sys.version_info = %s', sys.version_info)
 
 BLOCKSIZE = 1024
 TRUNCATE = 1024
@@ -139,7 +144,7 @@ DATATYPES = dict(
     punctuation = string.punctuation,
     whitespace = string.whitespace,
     ascii = string.printable,
-    bytes = "".join(chr(i) for i in range(256))
+    bytes = bytes(bytearray(range(256)))
 )
 
 
@@ -194,7 +199,7 @@ class RandomGenerator:
     def __getslice__(self, a, b):
         b = min(b, self.length)
         chars = DATATYPES[self.dtype]
-        return "".join(random.choice(chars) for x in range(a, b))
+        return ''.join(random.choice(chars) for x in range(a, b))
 
     def __repr__(self):
         return "%s random from %s"%(self.length, self.dtype)
@@ -267,7 +272,7 @@ class ValueLiteral(_ValueLiteral):
         return e.setParseAction(lambda x: klass(*x))
 
     def spec(self):
-        return '"%s"'%self.val.encode(STRING_ESCAPE)
+        return '"%s"' % self.val.encode(STRING_ESCAPE)
 
 
 class ValueNakedLiteral(_ValueLiteral):
@@ -831,7 +836,8 @@ class _Message(object):
             # Careful not to log any VALUE specs without sanitizing them first. We truncate at 1k.
             if hasattr(v, "values"):
                 v = [x[:TRUNCATE] for x in v.values(settings)]
-                v = "".join(v).encode(STRING_ESCAPE)
+                logging.debug('Message.log: v=%r', v)
+                v = ''.join(v).encode(STRING_ESCAPE)
             elif hasattr(v, "__len__"):
                 v = v[:TRUNCATE]
                 v = v.encode(STRING_ESCAPE)
