@@ -1,4 +1,4 @@
-import json, threading
+import json, threading, logging
 try:
     import Queue
 except ImportError:
@@ -9,6 +9,7 @@ try:
 except ImportError:
     from . import pathod, utils
 
+logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 class Daemon:
     IFACE = "127.0.0.1"
@@ -52,7 +53,8 @@ class Daemon:
         """
             Return the log buffer as a list of dictionaries.
         """
-        resp = requests.get("%s/api/log"%self.urlbase, verify=False)
+        resp = requests.get("%s/api/log" % self.urlbase, verify=False)
+        logging.debug('Daemon.log: resp=%r', vars(resp))
         return resp.json()["log"]
 
     def clear_log(self):

@@ -86,9 +86,9 @@ class PathodHandler(tcp.BaseHandler):
         if m(http.parse_init_connect(line)):
             headers = http.read_headers(self.rfile)
             self.wfile.write(
-                        b'HTTP/1.1 200 Connection established\r\n' +
-                        (b'Proxy-agent: %s\r\n'%version.NAMEVERSION) +
-                        b'\r\n'
+                        'HTTP/1.1 200 Connection established\r\n' +
+                        ('Proxy-agent: %s\r\n'%version.NAMEVERSION) +
+                        '\r\n'
                         )
             self.wfile.flush()
             if not self.server.ssloptions.not_after_connect:
