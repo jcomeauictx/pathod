@@ -24,6 +24,10 @@ try:
 except NameError:
     basestring = str
 try:
+    unicode
+except NameError:  # in Python3, str is unicode; in Python2, str is bytes
+    unicode = str
+try:
     b'\x80'.encode('string_escape')
     STRING_ESCAPE = 'string_escape'
 except AttributeError:
@@ -840,16 +844,17 @@ class _Message(object):
         ret = {}
         for i in self.logattrs:
             v = getattr(self, i)
-            # Careful not to log any VALUE specs without sanitizing them first. We truncate at 1k.
+            # Careful not to log any VALUE specs without sanitizing
+            # them first. We truncate at 1k.
             if hasattr(v, 'values'):
-                v = [x.decode()[:TRUNCATE] for x in v.values(settings)]
-                logging.debug('Message.log: v=%r', v)
-                try:
-                    v = (''.join(v)).encode(STRING_ESCAPE)
-                except TypeError as problem:
-                    logging.error('Message.log: failed joining %r as unicode',
-                                  v)
-                    raise ValueError('cannot join %r as unicode string' % v)
+                parts = []
+                for value in v.values(settings):
+                    try:
+                        parts.append(value.decode()[:TRUNCATE])
+                    except AttributeError as problem:
+                        parts.append(unicode(value))[:TRUNCATE])
+                logging.debug('Message.log: v=%r', parts)
+                v = (''.join(parts)).encode(STRING_ESCAPE)
             elif hasattr(v, '__len__'):
                 v = v[:TRUNCATE]
                 v = v.encode(STRING_ESCAPE)
