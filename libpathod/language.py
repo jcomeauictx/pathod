@@ -841,15 +841,20 @@ class _Message(object):
         for i in self.logattrs:
             v = getattr(self, i)
             # Careful not to log any VALUE specs without sanitizing them first. We truncate at 1k.
-            if hasattr(v, "values"):
+            if hasattr(v, 'values'):
                 v = [x[:TRUNCATE] for x in v.values(settings)]
                 logging.debug('Message.log: v=%r', v)
-                v = ''.join(v).encode(STRING_ESCAPE)
-            elif hasattr(v, "__len__"):
+                try:
+                    v = (''.join(v)).encode(STRING_ESCAPE)
+                except TypeError as problem:
+                    logging.error('Message.log: failed joining %r as unicode',
+                                  v)
+                    raise ValueError('cannot join %r as unicode string' % v)
+            elif hasattr(v, '__len__'):
                 v = v[:TRUNCATE]
                 v = v.encode(STRING_ESCAPE)
             ret[i] = v
-        ret["spec"] = self.spec()
+        ret['spec'] = self.spec()
         return ret
 
     def values(self, settings):
