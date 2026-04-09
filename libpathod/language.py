@@ -842,7 +842,7 @@ class _Message(object):
             v = getattr(self, i)
             # Careful not to log any VALUE specs without sanitizing them first. We truncate at 1k.
             if hasattr(v, 'values'):
-                v = [x[:TRUNCATE] for x in v.values(settings)]
+                v = [x.decode()[:TRUNCATE] for x in v.values(settings)]
                 logging.debug('Message.log: v=%r', v)
                 try:
                     v = (''.join(v)).encode(STRING_ESCAPE)
