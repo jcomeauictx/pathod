@@ -852,12 +852,21 @@ class _Message(object):
                     try:
                         parts.append(value.decode()[:TRUNCATE])
                     except AttributeError as problem:
-                        parts.append(unicode(value))[:TRUNCATE])
+                        parts.append(unicode(value)[:TRUNCATE])
                 logging.debug('Message.log: v=%r', parts)
-                v = (''.join(parts)).encode(STRING_ESCAPE)
+                try:
+                    v = (''.join(parts)).encode(STRING_ESCAPE)
+                except TypeError:
+                    # this may fail, but doing it to mitigate python2
+                    # TypeError: escape_encode() argument 1 must be string,
+                    #  not unicode
+                    v = (''.join(parts))
             elif hasattr(v, '__len__'):
                 v = v[:TRUNCATE]
-                v = v.encode(STRING_ESCAPE)
+                try:
+                    v = v.encode(STRING_ESCAPE)
+                except TypeError:  # python2 fails, ignore it
+                    pass
             ret[i] = v
         ret['spec'] = self.spec()
         return ret
