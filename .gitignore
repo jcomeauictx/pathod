@@ -12,3 +12,4 @@ netlib
 venv
 .idea
 .installed
+*.egg-info
