@@ -1862,7 +1862,7 @@ class QuotedString(Token):
         if escChar:
             self.pattern += (r'|(?:%s.)' % re.escape(escChar))
             charset = ''.join(set(self.quoteChar[0]+self.endQuoteChar[0])).replace('^',r'\^').replace('-',r'\-')
-            self.escCharReplacePattern = re.escape(self.escChar)+("([%s])" % charset)
+            self.escCharReplacePattern = re.escape(self.escChar)+"(.)"
         self.pattern += (r')*%s' % re.escape(self.endQuoteChar))
 
         try:
