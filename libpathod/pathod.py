@@ -231,11 +231,13 @@ class PathodHandler(tcp.BaseHandler):
             again, log = self.handle_request()
             if log:
                 if self.server.logreq:
-                    log["request_bytes"] = self.rfile.get_log().decode().encode(STRING_ESCAPE)
-                    self._log_bytes("Request", log["request_bytes"], self.server.hexdump)
+                    req_bytes = self.rfile.get_log()
+                    self._log_bytes("Request", req_bytes, self.server.hexdump)
+                    log["request_bytes"] = req_bytes.decode('latin-1').encode(STRING_ESCAPE).decode('ascii')
                 if self.server.logresp:
-                    log["response_bytes"] = self.wfile.get_log().decode().encode(STRING_ESCAPE)
-                    self._log_bytes("Response", log["response_bytes"], self.server.hexdump)
+                    resp_bytes = self.wfile.get_log()
+                    self._log_bytes("Response", resp_bytes, self.server.hexdump)
+                    log["response_bytes"] = resp_bytes.decode('latin-1').encode(STRING_ESCAPE).decode('ascii')
                 self.server.add_log(log)
             if not again:
                 return
