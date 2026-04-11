@@ -1861,8 +1861,12 @@ class QuotedString(Token):
             self.pattern += (r'|(?:%s)' % re.escape(escQuote))
         if escChar:
             self.pattern += (r'|(?:%s.)' % re.escape(escChar))
-            charset = ''.join(set(self.quoteChar[0]+self.endQuoteChar[0])).replace('^',r'\^').replace('-',r'\-')
-            self.escCharReplacePattern = re.escape(self.escChar)+"(.)"
+            # include both quote chars so \" unescapes inside '' and vice versa,
+            # but leave \x etc. intact for string_escape to handle later
+            charset = ''.join(set("'\""
+                                  +self.quoteChar[0]
+                                  +self.endQuoteChar[0])).replace('^',r'\^').replace('-',r'\-')
+            self.escCharReplacePattern = re.escape(self.escChar)+("([%s])" % charset)
         self.pattern += (r')*%s' % re.escape(self.endQuoteChar))
 
         try:
