@@ -855,7 +855,7 @@ class _Message(object):
                         parts.append(unicode(value)[:TRUNCATE])
                 logging.debug('Message.log: v=%r', parts)
                 try:
-                    v = (''.join(parts)).encode(STRING_ESCAPE)
+                    v = (''.join(parts)).encode(STRING_ESCAPE).decode('ascii')
                 except TypeError:
                     # this may fail, but doing it to mitigate python2
                     # TypeError: escape_encode() argument 1 must be string,
@@ -864,7 +864,7 @@ class _Message(object):
             elif hasattr(v, '__len__'):
                 v = v[:TRUNCATE]
                 try:
-                    v = v.encode(STRING_ESCAPE)
+                    v = v.encode(STRING_ESCAPE).decode('ascii')
                 except TypeError:  # python2 fails, ignore it
                     pass
             ret[i] = v
