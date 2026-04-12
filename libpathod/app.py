@@ -22,16 +22,16 @@ def make_app(noapi):
     if not noapi:
         @app.route('/api/info')
         def api_info():
-            return jsonify(
-                version = version.IVERSION
-            )
+            return jsonify(version=version.IVERSION)
 
 
     @app.route('/api/log')
     def api_log():
-        return jsonify(
-            log = app.config["pathod"].get_log()
-        )
+        payload = app.config['pathod'].get_log()
+        try:
+            return jsonify(log=payload)
+        except TypeError:
+            raise ValueError('%r contains bytes, not jsonifiable' % payload)
 
 
     @app.route('/api/clear_log')
