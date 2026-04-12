@@ -135,7 +135,7 @@ class PathodHandler(tcp.BaseHandler):
             method = method,
             headers = headers.lst,
             httpversion = httpversion,
-            sni = self.sni,
+            sni = self.sni.decode('ascii') if self.sni else self.sni,
             remote_address = self.client_address,
             clientcert = clientcert
         )

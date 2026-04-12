@@ -283,7 +283,7 @@ class ValueLiteral(_ValueLiteral):
         return e.setParseAction(lambda x: klass(*x))
 
     def spec(self):
-        return '"%s"' % self.val.encode(STRING_ESCAPE)
+        return '"%s"' % self.val.encode(STRING_ESCAPE).decode('ascii')
 
 
 class ValueNakedLiteral(_ValueLiteral):
@@ -293,7 +293,7 @@ class ValueNakedLiteral(_ValueLiteral):
         return e.setParseAction(lambda x: klass(*x))
 
     def spec(self):
-        return self.val.encode(STRING_ESCAPE)
+        return self.val.encode(STRING_ESCAPE).decode('ascii')
 
 
 class ValueGenerate(_Token):
