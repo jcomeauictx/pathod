@@ -205,9 +205,15 @@ class RandomGenerator:
         return self.length
 
     def __getitem__(self, x):
+        if isinstance(x, slice):
+            # Python 3: slice notation calls __getitem__ with a slice object
+            start, stop, step = x.indices(self.length)
+            chars = DATATYPES[self.dtype]
+            return ''.join(random.choice(chars) for _ in range(start, stop, step or 1))
         return random.choice(DATATYPES[self.dtype])
 
     def __getslice__(self, a, b):
+        # Python 2 calls this for val[a:b]; kept for compatibility
         b = min(b, self.length)
         chars = DATATYPES[self.dtype]
         return ''.join(random.choice(chars) for x in range(a, b))
