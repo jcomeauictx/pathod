@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import threading, re, logging, socket, sys, base64
 try:
     from urllib import unquote

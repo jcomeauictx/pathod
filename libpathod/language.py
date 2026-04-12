@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import sys, operator, string, random, mmap, os, time, copy, logging
 import abc
 from email.utils import formatdate

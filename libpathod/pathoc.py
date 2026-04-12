@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import sys, os, logging, json
 from netlib import tcp, http
 import netlib.utils
